@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{_layout}">
+<head>
+    <title>List products</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 th:if="${searchQuery == null}">Product List</h2>
+                <h2 th:if="${searchQuery != null}">
+                    Search Results 
+                    <small class="text-muted" th:if="${resultCount != null}">(<span th:text="${resultCount}"></span> found)</small>
+                </h2>
+            </div>
+            <a th:href="@{/products/create}" class="btn btn-primary">Create New Product</a>
+        </div>
+        
+        <div th:if="${searchQuery != null}" class="alert alert-info mb-3">
+            Searching for: "<strong th:text="${searchQuery}"></strong>"
+            <a th:href="@{/products}" class="ms-2">Clear search</a>
+        </div>
+        
+        <div th:if="${listproduct == null || listproduct.isEmpty()}" class="alert alert-info">
+            <span th:if="${searchQuery == null}">No products found. <a th:href="@{/products/create}">Create your first product</a></span>
+            <span th:if="${searchQuery != null}">No products found matching your search. <a th:href="@{/products}">View all products</a></span>
+        </div>
+        
+        <div th:if="${listproduct != null && !listproduct.isEmpty()}">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th style="width: 5%;">#</th>
+                            <th style="width: 20%;">Name</th>
+                            <th style="width: 15%;">Price</th>
+                            <th style="width: 15%;">Image</th>
+                            <th style="width: 15%;">Category</th>
+                            <th style="width: 20%;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="product : ${listproduct}">
+                            <th scope="row" th:text="${product.id}"></th>
+                            <td th:text="${product.name}"></td>
+                            <td>
+                                <strong class="text-success">
+                                    <span th:text="${product.price != null ? #numbers.formatInteger(product.price, 0, 'COMMA') : '0'}"></span> VNĐ
+                                </strong>
+                            </td>
+                            <td>
+                                <img th:if="${product.image != null && !product.image.isEmpty()}" 
+                                     height="80" width="100" 
+                                     th:src="@{|/images/${product.image}|}" 
+                                     alt="Product Image" 
+                                     class="img-thumbnail"
+                                     style="object-fit: cover;">
+                                <span th:if="${product.image == null || product.image.isEmpty()}" class="text-muted">No image</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-info" th:text="${product.category?.name ?: '—'}"></span>
+                            </td>
+                            <td>
+                                <a th:href="@{/products/edit/{id}(id=${product.id})}" class="btn btn-sm btn-secondary me-1">Edit</a>
+                                <form th:action="@{/products/delete/{id}(id=${product.id})}" method="post" style="display: inline;">
+                                    <button type="submit" class="btn btn-sm btn-danger" 
+                                            onclick="return confirm('Are you sure you want to delete this product?');">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
