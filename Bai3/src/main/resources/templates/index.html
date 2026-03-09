@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Demo Application</title>
+    <title layout:fragment="title">Trang chủ</title>
 </head>
 <body>
-<p>Welcome to the Demo Application</p>
-<p th:text="${message}"></p>
-<p>Trang chủ - Demo Application</p>
-
+<div layout:fragment="content">
+    <h1>Welcome to the Demo Application</h1>
+    <p>Xin chào Thymeleaf</p>
+    <p>Trang chủ - Demo Application</p>
+</div>
 </body>
 </html>
