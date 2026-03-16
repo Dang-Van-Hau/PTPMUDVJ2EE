@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 24px; }
+        .topbar { display: flex; gap: 12px; align-items: center; margin-bottom: 16px; }
+        table { border-collapse: collapse; width: 100%; max-width: 900px; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background: #f5f5f5; text-align: left; }
+        .thumb { width: 90px; height: 60px; object-fit: cover; border: 1px solid #ddd; }
+        .actions { display: flex; gap: 8px; }
+        a, button { padding: 6px 10px; cursor: pointer; }
+        .logout { margin-left: auto; }
+    </style>
+</head>
+<body>
+<div class="topbar">
+    <h2 style="margin: 0;">Product Management</h2>
+    <a th:href="@{/order}" sec:authorize="hasRole('USER')">My Order</a>
+    <a th:href="@{/products/add}" sec:authorize="hasRole('ADMIN')">Add Product</a>
+    <form class="logout" th:action="@{/logout}" method="post">
+        <button type="submit">Logout</button>
+    </form>
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Image</th>
+        <th>Price</th>
+        <th>Description</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${#lists.isEmpty(products)}">
+        <td colspan="6">No products yet.</td>
+    </tr>
+    <tr th:each="p : ${products}">
+        <td th:text="${p.id}"></td>
+        <td th:text="${p.name}"></td>
+        <td>
+            <img class="thumb" th:if="${p.imageName != null and !#strings.isEmpty(p.imageName)}" th:src="@{/uploads/{img}(img=${p.imageName})}" alt="Product image">
+            <span th:unless="${p.imageName != null and !#strings.isEmpty(p.imageName)}">No image</span>
+        </td>
+        <td th:text="${p.price}"></td>
+        <td th:text="${p.description}"></td>
+        <td>
+            <div class="actions" sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/products/edit/{id}(id=${p.id})}">Edit</a>
+                <form th:action="@{/products/delete/{id}(id=${p.id})}" method="post">
+                    <button type="submit" onclick="return confirm('Delete this product?')">Delete</button>
+                </form>
+            </div>
+            <span sec:authorize="hasRole('USER')">Read only</span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit product</title>
+</head>
+<body>
+    <div layout:fragment="content" class="container body-content">
+        <h2>Home Products</h2>
+        <form th:action="@{/products/edit}" 
+              th:object="${product}" 
+              method="post" 
+              enctype="multipart/form-data">
+            
+            <input type="hidden" th:field="*{id}">
+            
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" 
+                       class="form-control" 
+                       id="name" 
+                       th:field="*{name}" 
+                       placeholder="product Name">
+                <div th:if="${#fields.hasErrors('name')}" 
+                     th:errors="*{name}" 
+                     class="alert alert-danger"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="number" 
+                       class="form-control" 
+                       id="price" 
+                       th:field="*{price}" 
+                       placeholder="price">
+                <div th:if="${#fields.hasErrors('price')}" 
+                     th:errors="*{price}" 
+                     class="alert alert-danger"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="image">Image</label>
+                <input type="file" 
+                       class="form-control" 
+                       id="image" 
+                       name="imageProduct" 
+                       accept="image/png,image/jpeg">
+                <div th:if="${product.image != null}">
+                    <p>Ảnh hiện tại:</p>
+                    <img th:src="@{|/images/${product.image}|}" 
+                         alt="Current Image" 
+                         height="120" 
+                         width="150">
+                </div>
+                <div th:if="${#fields.hasErrors('image')}" 
+                     th:errors="*{image}" 
+                     class="alert alert-danger"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select class="form-control" 
+                        id="category" 
+                        name="categoryId">
+                    <option th:each="category: ${categories}" 
+                            th:value="${category.id}" 
+                            th:text="${category.name}"
+                            th:selected="${product.category != null && product.category.id == category.id}"></option>
+                </select>
+            </div>
+            
+            <input type="submit" class="btn btn-success" value="Update Product">
+            <a th:href="@{/products}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>
