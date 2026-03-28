@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Đặt hàng thành công</title>
+</head>
+<body>
+<div layout:fragment="content" class="container body-content">
+    <div class="alert alert-success">
+        <h4 class="alert-heading">Đặt hàng thành công</h4>
+        <p>Mã đơn hàng: <strong th:text="${orderId}">0</strong></p>
+        <p>Tổng tiền: <strong th:text="${orderTotal} + ' đ'">0</strong></p>
+        <hr/>
+        <a class="btn btn-primary" th:href="@{/shop}">Về cửa hàng</a>
+    </div>
+</div>
+</body>
+</html>
